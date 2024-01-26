@@ -591,17 +591,3 @@ class FlatMorphicNetwork(nn.Module):
         x = self.out(x)
         return x
  
-# Пример использования сети
-# learning_rate = 1
-# batch_size = 1 #может быть только 1
-# device = ("cuda:0")
-
-# l = resize[0]
-
-# input_size = (l,l)
-# num_sinapse = 3
-# window_width = 2
-# num_layers = 10
-# sw = True
-# net = SimpleNetwork(input_size, num_cl, num_sinapse, window_width, num_layers, sw)
-
