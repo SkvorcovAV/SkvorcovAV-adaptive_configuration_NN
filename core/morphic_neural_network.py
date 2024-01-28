@@ -67,29 +67,7 @@ class morphological_net_optimizer(optim.Optimizer):
                     grad = torch.where(torch.isnan(grad), torch.zeros_like(grad), grad)*group['learning_rate']
                     param.data -= grad
                     param_data = torch.div(param.data, torch.pi, rounding_mode='trunc')
-                    param.data-=param_data*torch.pi
-#                     velocricy-=grad
-# #                     print(velocricy)
-#                     potencial_coor = torch.floor(param.data + velocricy)
-#                     real_coor = torch.floor(param.data)
-#                     mooving = real_coor - potencial_coor
-#                     mooving[mooving!=0] = 1
-#                     param.data+=mooving*velocricy
-#                     velocricy[mooving!=0] = 0
-
-#                     param.data[velocricy>=1]-=1
-#                     param.data[velocricy<=-1]+=1
-#                     velocricy[velocricy>=1] = 0.9
-#                     velocricy[velocricy<=-1] = - 0.9
-#                     max_moving = grad.max()
-#                     if max_moving!=0:
-#                         opt_velocity = 1/max_moving
-#                         lr = group['learning_rate']*opt_velocity
-#                         param.data -= lr * grad
-#                         param.data[param.data<0]+=0
-#                         param.data[param.data>limit-1]=limit
-           
-                
+                    param.data-=param_data*torch.pi                
     
     def zero_grad(self):
         for group in self.param_groups:
@@ -98,10 +76,6 @@ class morphological_net_optimizer(optim.Optimizer):
                     param.grad.detach_()
                     param.grad.zero_()
                     
-                    
-             
-            
-
 
 class Axon_layer(nn.Module):
     
@@ -139,7 +113,7 @@ class Axon_layer(nn.Module):
         self.synapses_coordinates = nn.ParameterList(synapses_coordinates)
         self.output_size = nn.Parameter(torch.tensor(output_size), requires_grad = False)
         self.output = torch.zeros(output_size)
-#         self.Ordered_coordinates()
+
         
         self.synaptic_displacement_list = self.give_window(window_width, len(self.output.size()))
         self.reset_parameters()
@@ -153,7 +127,7 @@ class Axon_layer(nn.Module):
             for index in [0, 1]:
                 ensum_string += chr(65 + index)
         self.ensum_string = f"{ensum_string}, Z{ensum_string[1:]} ->Z{ensum_string}"
-#         print(self.ensum_string)
+
 
     def reset_parameters(self):
 #         nn.init.kaiming_uniform_(self.synapses_weight, a=math.sqrt(5))
@@ -279,7 +253,6 @@ class Dendrite_layer(nn.Module):
         self.output_size = nn.Parameter(torch.tensor(output_size), requires_grad = False)
         self.input_size = nn.Parameter(torch.tensor(input_size), requires_grad = False)
         self.output = torch.zeros(output_size)
-#         self.Ordered_coordinates()
         
         self.synaptic_displacement_list = self.give_window(window_width, len(self.input_size))
         self.reset_parameters()
@@ -293,11 +266,8 @@ class Dendrite_layer(nn.Module):
         else:
             self.ensum_string = "ZAX -> Z"            
         
-        
-#         print(self.ensum_string)
 
     def reset_parameters(self):
-#         nn.init.kaiming_uniform_(self.synapses_weight, a=math.sqrt(5))
         nn.init.uniform_(self.synapses_weight, a = -1, b=1)
     
     def to_decard_idx(self, angle_coord, size):
@@ -550,7 +520,6 @@ class FlatMorphicNetwork(nn.Module):
         
         num_elements = num_future
         inp_elements = torch.prod(torch.tensor(input_size))
-#         num_elements = int(inp_elements/10)
         
         self.inp_layers  = Flat_Morphic_module((inp_elements,), 
                                                (num_elements,),
@@ -577,10 +546,7 @@ class FlatMorphicNetwork(nn.Module):
         x = x.squeeze(dim=1) 
         x = self.flatten(x)
         x = self.inp_layers(x)
-        
-#         print(self.inp_layers.DL.synapses_coordinates[0])
         x = self.bn1(x)
-#         print(x)
         x = self.activation(x)
         for layer, bn in zip(self.layers, self.bns):
             x = layer(x)
