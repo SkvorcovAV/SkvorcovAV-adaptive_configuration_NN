@@ -58,9 +58,7 @@ class morphological_net_optimizer(optim.Optimizer):
             else:
                 
                 self.count+=1
-#                 for param, limit in zip(group['params'], group['output_size']):
                 for param, limit, name in zip(group['params'], group['limit'], self.coordinates_names):
-                    np.save(f'/home/alexskv/SCT/additional/weight/{self.count}_{name}.npy', param.data.cpu().numpy())
                     if param.grad is None:
                         continue
                     grad = param.grad.data
