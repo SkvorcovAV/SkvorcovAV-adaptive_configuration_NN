@@ -5,7 +5,7 @@ num_cl = 5
 resize = (28,28)
 #If sw are True, then only the structure of the neural network will change and there will be no change in the weight of connections.
 # num_sinapse - Number of connections of each neuron in layer N to neurons in layer N+1. 
-sw = True 
+sw = False 
 descriptions = "2DMorphicNetwork_ns_20_ww_2_nl_5_fs_28_28_lw_false_new_coord_syst"
 net = SmallMorphicNetwork(input_size = resize,
                           num_classes = num_cl,
